@@ -36,15 +36,16 @@ function addColumn() {
     i++;
 }
 
-function addCard() {
+function buildCard(cardText) {
     var card = document.createElement('div');
     card.classList.add('card');
     var prevBtn = document.createElement('button');
-    prevBtn.classList.add('nav-btn');
+    prevBtn.classList.add('nav-btn', 'btn-hidden');
     prevBtn.id = "prev-btn";
     prevBtn.innerHTML = "&#xab";
+    prevBtn.setAttribute('data-move', 'left');
     var taskName = document.createElement('p');
-    taskName.innerText = taskTitle.value;
+    taskName.innerText = cardText;
     taskName.classList.add('task-name');
     var taskDate = document.createElement('p');
     taskDate.classList.add('task-date')
@@ -56,24 +57,54 @@ function addCard() {
     nextBtn.classList.add('nav-btn');
     nextBtn.id = "next-btn";
     nextBtn.innerHTML = "&#187";
-    card.append(prevBtn, taskName, nextBtn);
-    var cardList = document.querySelector('.column').querySelector('#card-list');
+    nextBtn.setAttribute('data-move', 'right');
 
-    nextBtn.onclick = (e) => {
-        console.log();
-        var cardClone = e.target.parentElement.cloneNode(true);
-        var currentColumn = e.target.parentElement.parentElement.parentElement.parentElement;
-        console.log(cardClone);
-        if (currentColumn.nextElementSibling != null) {
-            var currentList = e.target.parentElement.parentElement;
-            var card = e.target.parentElement;
-            var nextList = currentColumn.nextElementSibling.querySelector('.card-list');
-            nextList.append(cardClone);
-            currentList.removeChild(card);
-        } else {
-        }
+    card.append(prevBtn, taskName, nextBtn);
+
+    return card;
+}
+
+function eventHandler(e) {
+    var cols = document.querySelectorAll('.column');
+    var currentColumn = e.target.closest('.column');
+    var card = e.target.closest('.card');
+    var nextBtn = card.querySelector('#next-btn');
+    var prevBtn = card.querySelector('#prev-btn');
+    if (e.target.getAttribute('data-move') == "right" && currentColumn.nextElementSibling != null) {
+        var nextList = currentColumn.nextElementSibling.querySelector('#card-list');
+        nextList.append(card);
+    } else {
     }
-    cardList.append(card);
+    if (e.target.getAttribute('data-move') == "left" && currentColumn.previousElementSibling != null) {
+        var prevList = currentColumn.previousElementSibling.querySelector('#card-list');
+        prevList.append(card);
+    } else {
+    }
+
+    // Code à factoriser
+    if (e.target.closest('.column') == cols[cols.length - 1]) {
+        nextBtn.classList.add('btn-hidden');
+    } else {
+        nextBtn.classList.remove('btn-hidden');
+    }
+    if (e.target.closest('.column') == cols[0]) {
+        prevBtn.classList.add('btn-hidden');
+    } else {
+        prevBtn.classList.remove('btn-hidden');
+    }
+}
+
+function addCard() {
+    var card = buildCard(taskTitle.value);
+    var cardBtns = card.querySelectorAll('.nav-btn');
+    var firstList = document.querySelector('.column').querySelector('#card-list');
+    firstList.append(card);
+    cardBtns.forEach(btn => {
+        btn.onclick = (e) => {
+            eventHandler(e);
+        }
+    });
+
 }
 
 addColumnBtn.onclick = () => {
@@ -94,10 +125,11 @@ closeBtn.onclick = () => {
 
 fab.onclick = () => {
     addTask.classList.add('add-show');
-    console.log(addTask)
 }
 
 createBtn.onclick = () => {
     modal.classList.replace('modal-show', 'modal-hidden');
     addCard();
 }
+
+/* Next Steeeeeeeeeeeeeeeeeeeeeeeeeeep !!!!!!!! */
