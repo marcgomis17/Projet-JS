@@ -21,13 +21,6 @@ var removed = false;
 var i = 0;
 
 var test = '';
-var board = {
-    column_1: ['Task 1', 'Task 2', 'Task 3'],
-    column_2: ['Task 4'],
-    column_3: ['Task 5', 'Task 6', 'Task 7', 'Task 8'],
-    column_4: ['Task 9', 'Task 10', 'Task 11', 'Task 12', 'Task 13'],
-    column_5: ['Task 13', 'Task 14'],
-};
 
 function renameColumns() {
     var columnNames = columnsWrapper.querySelectorAll('.column-name');
@@ -270,7 +263,7 @@ addForm.onsubmit = (e) => {
     e.preventDefault();
     var error = "";
     var smalls = addForm.querySelectorAll('small');
-    /*  addForm.querySelectorAll('*').forEach(field => {
+     addForm.querySelectorAll('*').forEach(field => {
          if (field.nodeName == "TEXTAREA" || field.nodeName == "INPUT") {
              error = checkFields(field);
              if (error != "") {
@@ -279,7 +272,7 @@ addForm.onsubmit = (e) => {
                  small.classList.remove('hidden');
              }
          }
-     }); */
+     });
     if (error == "") {
         addCard();
         smalls.forEach(small => {
@@ -288,7 +281,7 @@ addForm.onsubmit = (e) => {
                 small.innerText = "";
             }
         });
-        // addForm.reset();
+        addForm.reset();
         modal.classList.replace('modal-show', 'modal-hidden');
     }
 }
